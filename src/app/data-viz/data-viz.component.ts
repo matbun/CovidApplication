@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CovidDataService } from '../covid-data.service';
 import { TodayData } from '../today.module';
 
+
+import { ChartType, ChartOptions } from 'chart.js';
+import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
+
 @Component({
   selector: 'app-data-viz',
   templateUrl: './data-viz.component.html',
@@ -14,7 +18,22 @@ export class DataVizComponent implements OnInit {
   wwTableData: ...
   */
 
-  constructor(public coviddata: CovidDataService) { }
+  // Pie
+  public pieChartOptions: ChartOptions = {
+    responsive: true,
+  };
+  public pieChartLabels: Label[];
+  public pieChartData: SingleDataSet;
+  public pieChartType: ChartType = 'pie';
+  public pieChartLegend = true;
+  public pieChartPlugins = [];
+
+    
+
+  constructor(public coviddata: CovidDataService) { 
+    monkeyPatchChartJsTooltip();
+    monkeyPatchChartJsLegend();
+  }
 
   ngOnInit(): void {
     this.getData().then(() => {
@@ -47,6 +66,13 @@ export class DataVizComponent implements OnInit {
                                        response['TotalDeaths'],
                                        response['NewRecovered'],
                                        response['TotalRecovered']);
+                                       
+        this.pieChartLabels = ["Death cases", "Recovered cases", 'Active Cases'];
+        this.pieChartData = [this.todayData.totalDeaths,
+                             this.todayData.totalRecovered,
+                             this.todayData.totalConfirmed
+                            ];
+                            
       }
     );
   }

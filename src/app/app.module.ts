@@ -13,6 +13,8 @@ import { AuthComponent } from './auth/auth.component';
 import { NewsComponent } from './news/news.component';
 import { AddNewsComponent } from './add-news/add-news.component';
 import { DataVizComponent } from './data-viz/data-viz.component';
+import { ChartsModule } from 'ng2-charts';
+
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import { DataVizComponent } from './data-viz/data-viz.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AngularFireModule.initializeApp(environment.firebaseConfig)
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    ChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
