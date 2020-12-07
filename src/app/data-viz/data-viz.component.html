@@ -1,0 +1,28 @@
+
+<ng-container *ngIf="todayData">
+    <table class="table table-bordered table-striped">
+        <thead class="text-center">
+            <tr *ngIf="countryName == 'Worldwide'">
+                <td colspan="2">{{ countryName }}</td>
+            </tr>
+            <tr *ngIf="countryName != 'Worldwide'">
+                <td colspan="3">Worldwide > {{ countryName }}</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let case of todayData.cases">
+                <td>{{ case[0] }}</td>
+                <td>{{ case[1] }}</td>
+            </tr>
+            <tr *ngFor="let recover of todayData.recovers">
+                <td>{{ recover[0] }}</td>
+                <td>{{ recover[1] }}</td>
+            </tr>
+            <tr *ngFor="let deaths of todayData.deaths">
+                <td>{{ deaths[0] }}</td>
+                <td>{{ deaths[1] }}</td>
+            </tr>
+        </tbody>
+    </table>
+</ng-container>
+

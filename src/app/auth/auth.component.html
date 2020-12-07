@@ -1,0 +1,17 @@
+<!-- Row to be showed after the login -->
+<div class="row" *ngIf="userService.isUserSignedIn()">
+    <div class="col-sm-6">
+            <h3>{{ user.displayName }}</h3>
+    </div>
+    <div class="col-sm-6 text-right">
+        <button class="btn btn-danger" (click)="userService.signOut()">Sign Out</button>
+    </div>
+</div>
+
+<!-- Row to be showed before the login -->
+<div class="row" *ngIf="!userService.isUserSignedIn()">
+    <div class="col-sm-6"></div>
+    <div class="col-sm-6 text-right">
+        <button class="btn btn-info" (click)="userService.signInWithGoogle()">Sign In with Google</button>
+    </div>
+</div>
