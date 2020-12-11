@@ -1,5 +1,5 @@
 
-<ng-container *ngIf="todayData">
+<ng-container *ngIf="todayData && weekData">
     <table class="table table-bordered table-striped">
         <thead class="text-center">
             <tr *ngIf="countryName == 'Worldwide'">
@@ -25,16 +25,41 @@
         </tbody>
     </table>
 
-    <div class="my-5" style="display: block;">
-        <canvas baseChart 
-          [data]="pieChartData" 
-          [labels]="pieChartLabels" 
-          [chartType]="pieChartType"
-          [options]="pieChartOptions"
-          [plugins]="pieChartPlugins"
-          [legend]="pieChartLegend">
-        </canvas>
-      </div>
+    <div class="my-5">
+        <div class="row">
+            <h4>Coronavirus cases distribution: {{ countryName }}</h4>
+        </div>
+
+        <div class="my-1" style="display: block;">
+            <canvas baseChart 
+            [data]="pieChartData" 
+            [labels]="pieChartLabels" 
+            [chartType]="pieChartType"
+            [options]="pieChartOptions"
+            [plugins]="pieChartPlugins"
+            [legend]="pieChartLegend">
+            </canvas>
+        </div>
+    </div>
+
+    <div class="my-5">
+        <div class="row">
+            <h4>Coronavirus cases weekly distribution: {{ countryName }}</h4>
+        </div>
+
+        <div style="display: block;">
+            <canvas baseChart 
+              [datasets]="barChartData"
+              [labels]="barChartLabels"
+              [options]="barChartOptions"
+              [plugins]="barChartPlugins"
+              [legend]="barChartLegend"
+              [chartType]="barChartType">
+            </canvas>
+          </div>
+          
+    </div>
+
       
 </ng-container>
 
