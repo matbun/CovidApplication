@@ -8,6 +8,7 @@ import { Color, SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChart
 import { Country } from '../country.module';
 import { WeeklyData } from '../week.module';
 import { DayOneData } from '../dayone.module';
+import { MinLengthValidator } from '@angular/forms';
 
 @Component({
   selector: 'app-data-viz',
@@ -204,19 +205,26 @@ export class DataVizComponent implements OnInit {
         // If worldwide
         if(this.country.getSlug() == "world"){
           // Sort days
-          var cases = [];
+          let confirmed: number[] = [];
+          let deaths: number[] = [];
+          let recovered: number[] = [];
           var i: number = 0;          
           while(response[i] != null){
-            cases.push(response[i]);
+            confirmed.push(response[i]['TotalConfirmed']);
+            deaths.push(response[i]['TotalDeaths']);
+            recovered.push(response[i]['TotalRecovered']);
             i++;
           } 
           
-          // sort in descending order
-          cases.sort((a,b) => b['TotalConfirmed'] - a['TotalConfirmed']);
-                    
+          // sort in descending order: smooth out errors in the api
+          confirmed.sort((a,b) => b - a);
+          deaths.sort((a,b) => b - a);
+          recovered.sort((a,b) => b - a);
+         
+          
           var today = new Date();
           var currDay: Date;
-          var i: number = cases.length - 1;
+          var i: number = deaths.length - 1;
           while(i >= 0){
             currDay = this.coviddata.date_by_subtracting_days(today, i+1);
             //console.log(cases[i]);
@@ -224,9 +232,9 @@ export class DataVizComponent implements OnInit {
             
             aggrDateDayOne.set(currDay.toISOString(),
                               [
-                                cases[i]['TotalConfirmed'],
-                                cases[i]['TotalDeaths'],
-                                cases[i]['TotalRecovered']
+                                confirmed[i],
+                                deaths[i],
+                                recovered[i]
                               ]);
             i--;
           }
@@ -268,6 +276,11 @@ export class DataVizComponent implements OnInit {
           deaths.push(tuple[1]);
           recovered.push(tuple[2]);
         }
+
+        // sort in ascending order: smooth out errors in the api
+        confirmed.sort((a,b) => a - b);
+        deaths.sort((a,b) => a - b);
+        recovered.sort((a,b) => a - b);
         
         var dates: string[] = [];
         for(var date of aggrDateDayOne.keys()){
@@ -284,9 +297,9 @@ export class DataVizComponent implements OnInit {
         this.lineChartLabels = this.dayOneData.dates;
         
         this.lineChartData = [
-          { data: this.dayOneData.dailyDeaths, label: 'Daily new deaths'},
-          { data: this.dayOneData.dailyRecovered, label: 'Daily new recovered' },
-          { data: this.dayOneData.dailyConfirmed, label: 'Daily new confirmed' }
+          { data: this.dayOneData.dailyDeaths, label: 'Total deaths'},
+          { data: this.dayOneData.dailyRecovered, label: 'Total recovered' },
+          { data: this.dayOneData.dailyConfirmed, label: 'Total confirmed' }
         ];
       
         
