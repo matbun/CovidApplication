@@ -14,6 +14,11 @@ import { NewsComponent } from './news/news.component';
 import { AddNewsComponent } from './add-news/add-news.component';
 import { DataVizComponent } from './data-viz/data-viz.component';
 import { ChartsModule } from 'ng2-charts';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import {MatTableModule} from '@angular/material/table'; 
+import {MatSortModule} from '@angular/material/sort';
+
 
 
 @NgModule({
@@ -30,7 +35,10 @@ import { ChartsModule } from 'ng2-charts';
     BrowserModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
-    ChartsModule
+    ChartsModule,
+    BrowserAnimationsModule,
+    MatSortModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]

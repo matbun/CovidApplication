@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CovidDataService } from '../covid-data.service';
 import { TodayData } from '../today.module';
+import { Sort } from '@angular/material/sort';
 
 
 import { ChartType, ChartOptions, ChartDataSets } from 'chart.js';
@@ -9,6 +10,7 @@ import { Country } from '../country.module';
 import { WeeklyData } from '../week.module';
 import { DayOneData } from '../dayone.module';
 import { MinLengthValidator } from '@angular/forms';
+
 
 @Component({
   selector: 'app-data-viz',
@@ -21,7 +23,8 @@ export class DataVizComponent implements OnInit {
   todayData: TodayData;
   weekData: WeeklyData;
   dayOneData: DayOneData;
-
+  countriesTable: Country[] = [];
+  sortedCountriesTable: Country[];
 
   // Pie chart
   public pieChartOptions: ChartOptions = {
@@ -72,21 +75,47 @@ export class DataVizComponent implements OnInit {
 
     // Today data
     this.coviddata.getTodayData().then(
-      (response: JSON) => {
-        // Actions after today data is loaded
-        this.todayData = new TodayData(response['NewConfirmed'],
-                                       response['TotalConfirmed'],
-                                       response['NewDeaths'],
-                                       response['TotalDeaths'],
-                                       response['NewRecovered'],
-                                       response['TotalRecovered']);
-                                       
+      (response: any) => {
+        let responseData;
+        // If worldwide
+        if(this.country.getSlug() == "world"){
+          responseData = response[0];
+
+          // Summary table
+          let i: number = 0;
+          for (const country of response[1]) {
+            //console.log(country['Country'] + " - " + country['Slug']);
+            let currCountry: Country = new Country(country['Country'], country['Slug'], i);
+            currCountry.setTodayData(country['NewConfirmed'],
+                                      country['TotalConfirmed'],
+                                      country['NewDeaths'],
+                                      country['TotalDeaths'],
+                                      country['NewRecovered'],
+                                      country['TotalRecovered']);
+            this.countriesTable.push(currCountry);
+            i++;
+          }
+          this.sortedCountriesTable = this.countriesTable.slice();
+        }
+        // If in a country page
+        else{
+          responseData = response;
+        }
+
+        // If worldwide or in a country page
+        this.todayData = new TodayData(responseData['NewConfirmed'],
+                                        responseData['TotalConfirmed'],
+                                        responseData['NewDeaths'],
+                                        responseData['TotalDeaths'],
+                                        responseData['NewRecovered'],
+                                        responseData['TotalRecovered']);
+                                      
         this.pieChartLabels = ["Death cases", "Recovered cases", 'Active Cases'];
         this.pieChartData = [this.todayData.totalDeaths,
-                             this.todayData.totalRecovered,
-                             this.todayData.totalConfirmed
+                            this.todayData.totalRecovered,
+                            this.todayData.totalConfirmed
                             ];
-                            
+                       
       }
     );
     
@@ -94,19 +123,21 @@ export class DataVizComponent implements OnInit {
     var aggrDate: Map<string, [number, number, number]> = new Map();
     this.coviddata.getWeeklyData().then(
       (response: JSON) => {
+        var today = new Date();
 
         // If worldwide
         if(this.country.getSlug() == "world"){
           // Sort days
           var cases = [];
-          for(var i = 0; i < 8; i++){
+          var i: number = 0;
+          while (response[i] != null) {
             cases.push(response[i]);
+            i++;
           }
           cases.sort((a,b) => b['TotalConfirmed'] - a['TotalConfirmed']);
           
-          var today = new Date();
           var currDay: Date;
-          var i: number = 7;
+          var i: number = cases.length - 1;
           while(i >= 0){
             currDay = this.coviddata.date_by_subtracting_days(today, i+1);
             //console.log(cases[i]);
@@ -118,7 +149,6 @@ export class DataVizComponent implements OnInit {
                               ]);
             i--;
           }
-          //console.log(aggrDate);
         }
         
         // If in a specific country
@@ -179,6 +209,17 @@ export class DataVizComponent implements OnInit {
           }
           i++;
         }
+
+        // check if today data records is present. If not, fill with empty data
+        let today_string = today.toISOString().split("T")[0] + "T00:00:00Z";
+        if (aggrDate.get(today_string) == null) {
+          date_string = new Date(today_string).toDateString();
+          dates.push(date_string.split(" ")[1] + " " + Number(date_string.split(" ")[2]));
+          c.push(0);
+          d.push(0);
+          r.push(0);
+        }
+
         //console.log(Array.from(aggrDate.keys()));
         //console.log(dates);
                 
@@ -310,5 +351,33 @@ export class DataVizComponent implements OnInit {
 
   // Use a getter to get the name of the country from the html page
   get countryName() {return (this.coviddata && this.coviddata.getCovidCountry()) ? this.coviddata.getCovidCountry().name : null}
+  get countrySlug() {return (this.coviddata && this.coviddata.getCovidCountry()) ? this.coviddata.getCovidCountry().slug : null}
 
+  // Sort data in summary countries table
+  sortData(sort: Sort) {
+    const data = this.countriesTable.slice();
+    if (!sort.active || sort.direction === '') {
+      this.sortedCountriesTable = data;
+      return;
+    }
+
+    this.sortedCountriesTable = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'name': return compare(a.name, b.name, isAsc);
+        case 'newConfirmed': return compare(a.newConfirmed, b.newConfirmed, isAsc);
+        case 'totalConfirmed': return compare(a.totalConfirmed, b.totalConfirmed, isAsc);
+        case 'newDeaths': return compare(a.newDeaths, b.newDeaths, isAsc);
+        case 'totalDeaths': return compare(a.totalDeaths, b.totalDeaths, isAsc);
+        case 'newRecovered': return compare(a.newRecovered, b.newRecovered, isAsc);
+        case 'totalRecovered': return compare(a.totalRecovered, b.totalRecovered, isAsc);
+        default: return 0;
+      }
+    });
+  }
+
+}
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

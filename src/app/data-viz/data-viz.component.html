@@ -1,4 +1,3 @@
-
 <ng-container *ngIf="todayData">
     <table class="table table-bordered table-striped">
         <thead class="text-center">
@@ -64,7 +63,13 @@
 </ng-container>
 
 
+
 <ng-container *ngIf="dayOneData">
+    <div class="my-5">
+        <div class="row">
+            <h4>Total Coronavirus cases {{ countryName }}</h4>
+        </div>
+
     <div style="display: block;">
         <canvas baseChart width="400" height="400"
           [datasets]="lineChartData"
@@ -76,5 +81,42 @@
           [plugins]="lineChartPlugins">
         </canvas>
       </div>
+    </div>
 </ng-container>
+
+
+
+<ng-container *ngIf="countriesTable.length > 0 && countrySlug == 'world'">
+    <div class="my-5">
+        <div class="row">
+            <h4>Coronavirus cases by country</h4>
+        </div>
+
+        <table matSort (matSortChange)="sortData($event)" class="table table-bordered table-striped">
+            <thead class="text-center font-weight-bold">
+                <tr>
+                    <td mat-sort-header="name">Country <i class="fa fa-fw fa-sort"></i></td>
+                    <td mat-sort-header="newConfirmed">New Cases <i class="fa fa-fw fa-sort"></i></td>
+                    <td mat-sort-header="totalConfirmed">Total Cases <i class="fa fa-fw fa-sort"></i></td>
+                    <td mat-sort-header="newRecovered">New Recoveries <i class="fa fa-fw fa-sort"></i></td>
+                    <td mat-sort-header="totalRecovered">Total Recoveries <i class="fa fa-fw fa-sort"></i></td>
+                    <td mat-sort-header="newDeaths">New Deaths <i class="fa fa-fw fa-sort"></i></td>
+                    <td mat-sort-header="totalDeaths">Total Deaths <i class="fa fa-fw fa-sort"></i></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let country of sortedCountriesTable">
+                    <td><a [routerLink]="['/state-page']" (click)="coviddata.setCovidCountry(country.name, country.slug, country.code)">{{ country.name }}</a></td>
+                    <td>{{ country.newConfirmed }}</td>
+                    <td>{{ country.totalConfirmed }}</td>
+                    <td>{{ country.newRecovered }}</td>
+                    <td>{{ country.totalRecovered }}</td>
+                    <td>{{ country.newDeaths }}</td>
+                    <td>{{ country.totalDeaths }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</ng-container>
+
 

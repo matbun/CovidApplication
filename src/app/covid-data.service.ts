@@ -14,8 +14,7 @@ export class CovidDataService {
 
   
   constructor(private firestore: AngularFirestore) { 
-    // 8 giorni, così posso sottrarre e beccare la variazione giornaliera
-    this.oneWeekAgo = this.date_by_subtracting_days(this.today, 8);
+    this.oneWeekAgo = this.date_by_subtracting_days(this.today, 7);
   }
 
   // Add informaiton about data visualization
@@ -35,7 +34,7 @@ export class CovidDataService {
   }
 
   // get data from api/db
-  async getTodayData(): Promise<JSON>{
+  async getTodayData(): Promise<any>{
     /*
     this.firestore.collection("users").doc(this.user.uid)
           .set({
@@ -50,14 +49,12 @@ export class CovidDataService {
       });
     
       if (this.country.getSlug() == "world"){
-        return response['Global'];
+        return [response['Global'], response['Countries']];
       }
       else{
         return response['Countries'][this.country.getCode()];
       }
     }
-
-  
 
   async getWeeklyData(): Promise<JSON>{
     let week_url = "UNDEFINED";
@@ -88,7 +85,6 @@ export class CovidDataService {
 
     return response
   }
-
 
   async getDayOneData(): Promise<JSON>{
     let dayone_url = "UNDEFINED";
@@ -128,6 +124,10 @@ export class CovidDataService {
     );
 }
 
+//test
+testCountry(name){
+  console.log("Country selected: " + name);
   
+}  
  
 }
