@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CovidDataService } from '../covid-data.service';
 import { TodayData } from '../today.module';
 
 
 import { ChartType, ChartOptions, ChartDataSets } from 'chart.js';
-import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
+import { Color, SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
 import { Country } from '../country.module';
 import { WeeklyData } from '../week.module';
+import { DayOneData } from '../dayone.module';
 
 @Component({
   selector: 'app-data-viz',
@@ -18,9 +19,10 @@ export class DataVizComponent implements OnInit {
   country: Country;
   todayData: TodayData;
   weekData: WeeklyData;
+  dayOneData: DayOneData;
 
 
-  // Pie
+  // Pie chart
   public pieChartOptions: ChartOptions = {
     responsive: true,
   };
@@ -30,19 +32,31 @@ export class DataVizComponent implements OnInit {
   public pieChartLegend = true;
   public pieChartPlugins = [];
 
-  // Bar
+  // Bar chart
   public barChartOptions: ChartOptions = {
     responsive: true,
   };
-  public barChartLabels: Label[];// = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
+  public barChartLabels: Label[];
   public barChartType: ChartType = 'bar';
   public barChartLegend = true;
   public barChartPlugins = [];
+  public barChartData: ChartDataSets[];
 
-  public barChartData: ChartDataSets[];/* = [
-    { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
-    { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' }
-  ];*/
+  // Line chart
+  public lineChartData: ChartDataSets[];
+  public lineChartLabels: Label[];
+  public lineChartOptions: ChartOptions = {
+    responsive: true,
+  };
+  public lineChartColors: Color[] = [
+    {
+      //borderColor: 'black',
+      backgroundColor: 'rgba(255,0,0,0.3)',
+    },
+  ];
+  public lineChartLegend = true;
+  public lineChartType = 'line';
+  public lineChartPlugins = [];
 
     
 
@@ -90,10 +104,10 @@ export class DataVizComponent implements OnInit {
           cases.sort((a,b) => b['TotalConfirmed'] - a['TotalConfirmed']);
           
           var today = new Date();
-          var currDay = new Date();
+          var currDay: Date;
           var i: number = 7;
           while(i >= 0){
-            currDay.setDate(today.getDate() - i - 1);
+            currDay = this.coviddata.date_by_subtracting_days(today, i+1);
             //console.log(cases[i]);
             aggrDate.set(currDay.toISOString(),
                               [
@@ -180,9 +194,108 @@ export class DataVizComponent implements OnInit {
 
       }
     );
+
+
+    // Day one data
+    var aggrDateDayOne: Map<string, [number, number, number]> = new Map();
+    this.coviddata.getDayOneData().then(
+      (response: JSON) => {
+
+        // If worldwide
+        if(this.country.getSlug() == "world"){
+          // Sort days
+          var cases = [];
+          var i: number = 0;          
+          while(response[i] != null){
+            cases.push(response[i]);
+            i++;
+          } 
+          
+          // sort in descending order
+          cases.sort((a,b) => b['TotalConfirmed'] - a['TotalConfirmed']);
+                    
+          var today = new Date();
+          var currDay: Date;
+          var i: number = cases.length - 1;
+          while(i >= 0){
+            currDay = this.coviddata.date_by_subtracting_days(today, i+1);
+            //console.log(cases[i]);
+            //console.log("Date: " + currDay.toISOString());
+            
+            aggrDateDayOne.set(currDay.toISOString(),
+                              [
+                                cases[i]['TotalConfirmed'],
+                                cases[i]['TotalDeaths'],
+                                cases[i]['TotalRecovered']
+                              ]);
+            i--;
+          }
+        }
+        // If in a specific country
+        else{
+          var i: number = 0;
+          while(response[i] != null){
+            //console.log(response[i]);
+            if(aggrDateDayOne.get(response[i]['Date']) == null){
+              aggrDateDayOne.set(response[i]['Date'],
+                                [
+                                  response[i]['Confirmed'],
+                                  response[i]['Deaths'],
+                                  response[i]['Recovered']
+                                ]);
+            }
+            else{
+              const curr = aggrDateDayOne.get(response[i]['Date']);
+              aggrDateDayOne.set(response[i]['Date'],
+                                [
+                                  response[i]['Confirmed'] + curr[0],
+                                  response[i]['Deaths'] + curr[1],
+                                  response[i]['Recovered'] + curr[2]
+                                ]);
+            }
+            i++;
+          }
+        }
+
+        //console.log(aggrDateDayOne);
+
+        let confirmed: number[] = [];
+        let deaths: number[] = [];
+        let recovered: number[] = [];
+
+        for(var tuple of aggrDateDayOne.values()){
+          confirmed.push(tuple[0]);
+          deaths.push(tuple[1]);
+          recovered.push(tuple[2]);
+        }
+        
+        var dates: string[] = [];
+        for(var date of aggrDateDayOne.keys()){
+            var date_string = new Date(date).toDateString();
+            dates.push(date_string.split(" ")[1] + " " + Number(date_string.split(" ")[2]));
+        }
+        //console.log(Array.from(aggrDateDayOne.keys()));
+        //console.log(dates);
+                
+        this.dayOneData = new DayOneData(confirmed, deaths, recovered, dates);
+        //console.log(this.dayOneData);
+        
+        // Line chart
+        this.lineChartLabels = this.dayOneData.dates;
+        
+        this.lineChartData = [
+          { data: this.dayOneData.dailyDeaths, label: 'Daily new deaths'},
+          { data: this.dayOneData.dailyRecovered, label: 'Daily new recovered' },
+          { data: this.dayOneData.dailyConfirmed, label: 'Daily new confirmed' }
+        ];
+      
+        
+      }
+    );
     
   }
 
   // Use a getter to get the name of the country from the html page
   get countryName() {return (this.coviddata && this.coviddata.getCovidCountry()) ? this.coviddata.getCovidCountry().name : null}
+
 }
