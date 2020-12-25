@@ -1,6 +1,7 @@
 import { Injectable, ɵConsole } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore';
 import { Country } from './country.module';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,8 @@ export class CovidDataService {
   oneWeekAgo: Date;
 
   
-  constructor(private firestore: AngularFirestore) { 
+  constructor(private firestore: AngularFirestore,
+              private httpClient: HttpClient) { 
     this.oneWeekAgo = this.date_by_subtracting_days(this.today, 7);
   }
 
@@ -43,16 +45,63 @@ export class CovidDataService {
             email: this.user.email
           }, {merge: true});
     */
-    const response = await fetch('https://api.covid19api.com/summary', { method: "GET" })
-      .then(function(response) {
-        return response.json();
-      });
+    const today_string = (new Date()).toISOString().split("T")[0];    
+    const countriesSummary = this.firestore.collection("summary").doc(today_string);
+    const resp = await countriesSummary.get().toPromise();
+    var responseDoc;
+  
+    if (resp.exists) {
+      console.log("Got summary data from firebase");
+      responseDoc = resp.get('data'); // access 'data' field
+    }
+    else{
+      responseDoc = null;
+    }
+    //console.log(responseDoc);
     
+    // Update data on server if not present
+    if (responseDoc == null) {
+      console.log("Got summary data from API");
+      
+      // 1. Get from API
+      const resp = await this.httpClient.get('https://api.covid19api.com/summary').toPromise();
+      //console.log(resp);
+      
+      // 2. Format response
+      responseDoc = [];
+      responseDoc.push({
+        Slug: 'world',
+        Country: 'Worldwide',
+        NewConfirmed: resp['Global']['NewConfirmed'],
+        TotalConfirmed: resp['Global']['TotalConfirmed'],
+        NewDeaths: resp['Global']['NewDeaths'],
+        TotalDeaths: resp['Global']['TotalDeaths'],
+        NewRecovered: resp['Global']['NewRecovered'],
+        TotalRecovered: resp['Global']['TotalRecovered']
+      })
+      for (const country of resp['Countries']) {
+        responseDoc.push(country);
+      }
+      console.log(responseDoc);
+      
+      // 3. Load on server
+      countriesSummary.set({data: responseDoc}, {merge: true});
+    } 
+  
       if (this.country.getSlug() == "world"){
-        return [response['Global'], response['Countries']];
+        const worldIndex = responseDoc.findIndex((el) => el['Slug'] == this.country.getSlug());
+        const worldDoc = responseDoc[worldIndex];
+        if (worldIndex > -1) {
+          responseDoc.splice(worldIndex, 1);
+        }
+        console.log(worldDoc);
+        console.log(responseDoc);
+        
+        return [worldDoc, responseDoc];
       }
       else{
-        return response['Countries'][this.country.getCode()];
+        const countryIndex = responseDoc.findIndex((el) => el['Slug'] == this.country.getSlug());
+        return responseDoc[countryIndex];
       }
     }
 

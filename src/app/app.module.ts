@@ -18,6 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import {MatTableModule} from '@angular/material/table'; 
 import {MatSortModule} from '@angular/material/sort';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -38,7 +39,8 @@ import {MatSortModule} from '@angular/material/sort';
     ChartsModule,
     BrowserAnimationsModule,
     MatSortModule,
-    MatTableModule
+    MatTableModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
