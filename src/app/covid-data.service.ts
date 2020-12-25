@@ -82,7 +82,7 @@ export class CovidDataService {
       for (const country of resp['Countries']) {
         responseDoc.push(country);
       }
-      console.log(responseDoc);
+      //console.log(responseDoc);
       
       // 3. Load on server
       countriesSummary.set({data: responseDoc}, {merge: true});
@@ -94,8 +94,8 @@ export class CovidDataService {
         if (worldIndex > -1) {
           responseDoc.splice(worldIndex, 1);
         }
-        console.log(worldDoc);
-        console.log(responseDoc);
+        //console.log(worldDoc);
+        //console.log(responseDoc);
         
         return [worldDoc, responseDoc];
       }
