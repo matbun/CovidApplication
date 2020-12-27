@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 })
 export class UserService {
 
-  private user: User;
+  user: User;
 
   constructor(private afAuth: AngularFireAuth,
               private firestore: AngularFirestore,
@@ -20,12 +20,29 @@ export class UserService {
 
   // Signin method
   async signInWithGoogle(){
+    // Auth with google 
     const credentials = await this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-    this.user = {
-      uid: credentials.user.uid,
-      displayName: credentials.user.displayName,
-      email: credentials.user.email
-    };
+
+    // Look for user data on firestore db
+    const userDoc = await this.firestore.collection("users").doc(credentials.user.uid).get().toPromise();
+    if (userDoc.exists) {
+      this.user = {
+        uid: userDoc.get("uid"),
+        displayName: userDoc.get("displayName"),
+        email: userDoc.get("email"),
+        admin: userDoc.get("admin"),
+        countriesNewsEditor: userDoc.get("countriesNewsEditor")
+      }
+    }
+    else{
+      this.user = {
+        uid: credentials.user.uid,
+        displayName: credentials.user.displayName,
+        email: credentials.user.email,
+        admin: false,
+        countriesNewsEditor: []
+      }
+    }
 
     // Save user info in browser local storage
     localStorage.setItem("user", JSON.stringify(this.user));
@@ -37,11 +54,7 @@ export class UserService {
   // Update user data in the firestore db
   private updateUserData(){
     this.firestore.collection("users").doc(this.user.uid)
-          .set({
-            uid: this.user.uid,
-            displayName: this.user.displayName,
-            email: this.user.email
-          }, {merge: true});
+          .set(this.user, {merge: true});
   }
 
   // Method used by components, in order to get user data

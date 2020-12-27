@@ -1,0 +1,14 @@
+{
+    "france": [
+        {
+            "date": "2020-12-21",
+            "title": "New vaccine discovered",
+            "corpus": "bla bla bla..."
+        },
+        {
+            "date": "2020-12-20",
+            "title": "...",
+            "corpus": "bla bla bla..."
+        }
+    ]
+}

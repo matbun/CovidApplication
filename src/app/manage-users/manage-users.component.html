@@ -1,0 +1,10 @@
+
+<h4>Basic mat-select</h4>
+<mat-form-field appearance="fill">
+  <mat-label>Select user</mat-label>
+  <mat-select>
+    <mat-option *ngFor="let usr of users" [value]="usr.uid">
+      {{usr.displayName}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

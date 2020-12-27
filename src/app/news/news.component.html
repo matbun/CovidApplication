@@ -1,1 +1,74 @@
-<p>news works!</p>
+<ng-module *ngIf="news && news.length > 0">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <td>
+                    Date
+                </td>
+                <td>
+                    Title
+                </td>
+                <td>
+                    Corpus
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let n of news">
+                <td>
+                    {{ n.date.toDate() | date }}
+                </td>
+                <td>
+                    {{ n.title }}
+                </td>
+                <td>
+                    {{ n.corpus }}
+                </td>    
+            </tr>
+        </tbody>
+    </table>
+</ng-module>
+
+<h4>Add News</h4>
+<form (ngSubmit)="addNews()">
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="dateInput">Date</label>
+      <input
+        type="date"
+        id="dateInput"
+        name="dateInput"
+        class="form-control"
+        [(ngModel)]="date"
+        required
+      />
+    </div>
+    <div class="col-md-6">
+      <label for="titleInput">Title</label>
+      <input
+        type="text"
+        id="titleInput"
+        name="titleInput"
+        class="form-control"
+        placeholder="News title"
+        [(ngModel)]="title"
+        required
+      />
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-12">
+      <label for="corpusInput">Corpus</label>
+      <input
+        type="text"
+        id="corpusInput"
+        name="corpusInput"
+        class="form-control"
+        placeholder="News corpus"
+        [(ngModel)]="corpus"
+        required
+      />
+    </div>
+  </div>
+  <button class="btn btn-primary">Add</button>
+</form>

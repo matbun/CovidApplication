@@ -2,6 +2,8 @@ import { Injectable, ɵConsole } from '@angular/core';
 import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore';
 import { Country } from './country.module';
 import { HttpClient } from '@angular/common/http';
+import { News } from './news.module';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -105,7 +107,7 @@ export class CovidDataService {
       }
     }
 
-  async getWeeklyData(): Promise<JSON>{
+  async getWeeklyData(){
     let week_url = "UNDEFINED";
     // If I want to get worldwide data
     if (this.country.getSlug() == "world"){
@@ -127,15 +129,19 @@ export class CovidDataService {
     }
     
     console.log("Weekly data URL: " + week_url);
+    
     const response = await fetch(week_url, { method: "GET" })
     .then(function(response) {
       return response.json();
     });
+    
 
-    return response
+    //const response = await this.httpClient.get(week_url).toPromise();
+
+    return response;
   }
 
-  async getDayOneData(): Promise<JSON>{
+  async getDayOneData(){
     let dayone_url = "UNDEFINED";
     // If I want to get worldwide data
     if (this.country.getSlug() == "world"){
@@ -152,13 +158,59 @@ export class CovidDataService {
     }
     
     console.log("Dayone data URL: " + dayone_url);
+    
     const response = await fetch(dayone_url, { method: "GET" })
     .then(function(response) {
       return response.json();
     });
+    
+    //const response = await this.httpClient.get(dayone_url).toPromise();
 
     return response
   }
+
+  getNews(){
+    return this.firestore.collection("news").doc(this.country.getSlug())
+    .collection("country_news", ref => ref.orderBy('date', 'desc')).valueChanges();
+  }
+
+  addNews(news: News){
+    this.firestore.collection("news").doc(this.country.getSlug())
+    .collection("country_news").add(news);
+  }
+
+  async getCountries(){
+    var countries = [];
+    const response = await this.firestore
+      .collection("countries", ref => ref.orderBy('name', 'asc'))
+      .get().toPromise();
+    
+    // If countries are present on the firestore database
+    if (response.docs.length > 0) {
+      countries = response.docs.map(doc => doc.data());
+    }
+    // Otherwise get them from API and load them on the db
+    else{
+      const countries_api = "https://api.covid19api.com/countries";
+      const api_resp = await this.httpClient.get(countries_api).toPromise();
+      for (let i = 0; api_resp[i]!= null; i++) {
+        let curr_country = {
+          name: api_resp[i]['Country'],
+          slug: api_resp[i]['Slug']
+        };
+        countries.push(curr_country);
+        this.firestore.collection("countries").doc(curr_country.slug).set(curr_country);
+      }
+      console.log("Countries got from API");        
+    }
+    return countries;
+  }
+
+  getUsers(){
+    return this.firestore.collection("users").get();
+  }
+
+
 
   // subtract days to date
   date_by_subtracting_days(date, days) {
@@ -173,10 +225,5 @@ export class CovidDataService {
     );
 }
 
-//test
-testCountry(name){
-  console.log("Country selected: " + name);
-  
-}  
  
 }

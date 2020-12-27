@@ -123,7 +123,7 @@ export class DataVizComponent implements OnInit {
     var aggrDate: Map<string, [number, number, number]> = new Map();
     this.coviddata.getWeeklyData().then(
       (response: JSON) => {
-        var today = new Date();
+        var today = new Date();        
 
         // If worldwide
         if(this.country.getSlug() == "world"){
@@ -241,7 +241,7 @@ export class DataVizComponent implements OnInit {
     // Day one data
     var aggrDateDayOne: Map<string, [number, number, number]> = new Map();
     this.coviddata.getDayOneData().then(
-      (response: JSON) => {
+      (response: JSON) => {        
 
         // If worldwide
         if(this.country.getSlug() == "world"){
