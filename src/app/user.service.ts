@@ -57,6 +57,13 @@ export class UserService {
           .set(this.user, {merge: true});
   }
 
+  // Update user information for a specific user
+  updateUser(user: User){
+    this.firestore.collection("users").doc(user.uid)
+          .set(user, {merge: true});
+  }
+
+
   // Method used by components, in order to get user data
   getUser(){
     return JSON.parse(localStorage.getItem("user"));

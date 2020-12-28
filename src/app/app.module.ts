@@ -22,8 +22,11 @@ import { FormsModule } from '@angular/forms';
 import { ManageUsersComponent } from './manage-users/manage-users.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-
-
+import {MatCheckboxModule} from '@angular/material/checkbox'; 
+import { ReactiveFormsModule } from '@angular/forms';
+import {MatListModule} from '@angular/material/list';
+import {MatAutocompleteModule} from '@angular/material/autocomplete'; 
+import {  MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -46,7 +49,13 @@ import { MatSelectModule } from '@angular/material/select';
     MatTableModule,
     HttpClientModule,
     FormsModule,
-    MatSelectModule
+    MatSelectModule,
+    MatCheckboxModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    MatListModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]

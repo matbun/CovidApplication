@@ -1,7 +1,7 @@
 <!-- Row to be showed after the login -->
 <div class="row" *ngIf="userService.isUserSignedIn()">
     <div class="col-sm-6">
-            <h3>{{ user.displayName }}</h3>
+            <h4 class="heading">{{ user.displayName }}</h4>
     </div>
     <div class="col-sm-6 text-right">
         <button class="btn btn-danger" (click)="userService.signOut()">Sign Out</button>

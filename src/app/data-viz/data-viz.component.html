@@ -26,7 +26,7 @@
 
     <div class="my-5">
         <div class="row">
-            <h4>Coronavirus cases distribution: {{ countryName }}</h4>
+            <h4 class="heading">Coronavirus cases distribution: {{ countryName }}</h4>
         </div>
 
         <div class="my-1" style="display: block;">
@@ -45,7 +45,7 @@
 <ng-container *ngIf="weekData">
     <div class="my-5">
         <div class="row">
-            <h4>Coronavirus cases weekly distribution: {{ countryName }}</h4>
+            <h4 class="heading">Coronavirus cases weekly distribution: {{ countryName }}</h4>
         </div>
 
         <div style="display: block;">
@@ -67,7 +67,7 @@
 <ng-container *ngIf="dayOneData">
     <div class="my-5">
         <div class="row">
-            <h4>Total Coronavirus cases {{ countryName }}</h4>
+            <h4 class="heading">Total Coronavirus cases {{ countryName }}</h4>
         </div>
 
     <div style="display: block;">
@@ -89,7 +89,7 @@
 <ng-container *ngIf="countriesTable.length > 0 && countrySlug == 'world'">
     <div class="my-5">
         <div class="row">
-            <h4>Coronavirus cases by country</h4>
+            <h4 class="heading">Coronavirus cases by country</h4>
         </div>
 
         <table matSort (matSortChange)="sortData($event)" class="table table-bordered table-striped">
