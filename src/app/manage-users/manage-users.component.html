@@ -62,13 +62,13 @@
     <label>Edited users settings:</label>
     {{ showEditedUsers() }}
     <br><br>
-    <button class="btn btn-alert" (click)="saveChanges()">Save changes</button>
+    <button class="btn btn-danger" (click)="saveChanges()">Save changes</button>
   </ng-module>
   
 
 </ng-module>
 <!-- Return to home page -->
-<div>
+<div class="mt-3">
   <button class="btn btn-info" [routerLink]="['/home-page']">Go back</button>
 </div>
 

@@ -33,7 +33,6 @@ export class NewsComponent implements OnInit {
   }
 
   addNews(){
-    //let lastNews = new News(this.title, this.date, this.corpus);
     let lastNews = {
       date: new Date(this.date),
       title: this.title,
@@ -50,7 +49,7 @@ export class NewsComponent implements OnInit {
     this.user = this.userService.getUser();
 
     // look for permission
-    const i = this.user.countriesNewsEditor.findIndex((val) => val == this.coviddata.getCovidCountry().getSlug());
+    const i = this.user.countriesNewsEditor.findIndex((val) => val == this.coviddata.getCovidCountry().slug);
     if (i >= 0) {
       return true;
     }
