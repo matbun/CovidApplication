@@ -39,6 +39,7 @@ export class CovidDataService {
 
   // get data from api/db
   async getTodayData(): Promise<any>{
+    this.country = this.getCovidCountry();
     /*
     this.firestore.collection("users").doc(this.user.uid)
           .set({
@@ -48,6 +49,9 @@ export class CovidDataService {
           }, {merge: true});
     */
     const today_string = (new Date()).toISOString().split("T")[0];    
+    
+    // AVOID READ FROM SERVER
+    /*
     const countriesSummary = this.firestore.collection("summary").doc(today_string);
     const resp = await countriesSummary.get().toPromise();
     var responseDoc;
@@ -89,6 +93,31 @@ export class CovidDataService {
       // 3. Load on server
       countriesSummary.set({data: responseDoc}, {merge: true});
     } 
+    */
+
+    // PATCH STARTS HERE
+    var responseDoc;
+    // 1. Get from API
+    const resp = await this.httpClient.get('https://api.covid19api.com/summary').toPromise();
+    //console.log(resp);
+    
+    // 2. Format response
+    responseDoc = [];
+    responseDoc.push({
+      Slug: 'world',
+      Country: 'Worldwide',
+      NewConfirmed: resp['Global']['NewConfirmed'],
+      TotalConfirmed: resp['Global']['TotalConfirmed'],
+      NewDeaths: resp['Global']['NewDeaths'],
+      TotalDeaths: resp['Global']['TotalDeaths'],
+      NewRecovered: resp['Global']['NewRecovered'],
+      TotalRecovered: resp['Global']['TotalRecovered']
+    })
+    for (const country of resp['Countries']) {
+      responseDoc.push(country);
+    }
+
+    //PATCH ENDS HERE
   
       if (this.country.getSlug() == "world"){
         const worldIndex = responseDoc.findIndex((el) => el['Slug'] == this.country.getSlug());
@@ -108,6 +137,8 @@ export class CovidDataService {
     }
 
   async getWeeklyData(){
+    this.country = this.getCovidCountry();
+
     let week_url = "UNDEFINED";
     // If I want to get worldwide data
     if (this.country.getSlug() == "world"){
@@ -142,6 +173,8 @@ export class CovidDataService {
   }
 
   async getDayOneData(){
+    this.country = this.getCovidCountry();
+
     let dayone_url = "UNDEFINED";
     // If I want to get worldwide data
     if (this.country.getSlug() == "world"){
@@ -170,11 +203,13 @@ export class CovidDataService {
   }
 
   getNews(){
+    this.country = this.getCovidCountry();
     return this.firestore.collection("news").doc(this.country.getSlug())
     .collection("country_news", ref => ref.orderBy('date', 'desc')).valueChanges();
   }
 
   addNews(news: News){
+    this.country = this.getCovidCountry();
     this.firestore.collection("news").doc(this.country.getSlug())
     .collection("country_news").add(news);
   }
@@ -191,16 +226,22 @@ export class CovidDataService {
     }
     // Otherwise get them from API and load them on the db
     else{
-      const countries_api = "https://api.covid19api.com/countries";
+      //const countries_api = "https://api.covid19api.com/countries";
+      const countries_api = 'https://api.covid19api.com/summary';
       const api_resp = await this.httpClient.get(countries_api).toPromise();
-      for (let i = 0; api_resp[i]!= null; i++) {
-        let curr_country = {
-          name: api_resp[i]['Country'],
-          slug: api_resp[i]['Slug']
+      for (let i = 0; api_resp['Countries'][i]!= null; i++) {
+        var curr_country = {
+          name: api_resp['Countries'][i]['Country'],
+          slug: api_resp['Countries'][i]['Slug']
         };
         countries.push(curr_country);
         this.firestore.collection("countries").doc(curr_country.slug).set(curr_country);
       }
+      // Add also worldwide
+      curr_country = {name: "Worldwide", slug: "world"};
+      countries.push(curr_country);
+      this.firestore.collection("countries").doc(curr_country.slug).set(curr_country);
+      
       console.log("Countries got from API");        
     }
     return countries;

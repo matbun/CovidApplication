@@ -45,4 +45,16 @@ export class NewsComponent implements OnInit {
     this.corpus = undefined;
   }
 
+  isUserEligibleEditor(): boolean{
+    // Update user
+    this.user = this.userService.getUser();
+
+    // look for permission
+    const i = this.user.countriesNewsEditor.findIndex((val) => val == this.coviddata.getCovidCountry().getSlug());
+    if (i >= 0) {
+      return true;
+    }
+    return false;
+  }
+
 }

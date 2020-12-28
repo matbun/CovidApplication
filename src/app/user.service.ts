@@ -21,7 +21,7 @@ export class UserService {
   // Signin method
   async signInWithGoogle(){
     // Auth with google 
-    const credentials = await this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    const credentials = await this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());    
 
     // Look for user data on firestore db
     const userDoc = await this.firestore.collection("users").doc(credentials.user.uid).get().toPromise();
@@ -59,6 +59,11 @@ export class UserService {
 
   // Update user information for a specific user
   updateUser(user: User){
+    var currUser = this.getUser();
+    if (user.uid == currUser.uid) {
+      this.user = user;
+      localStorage.setItem("user", JSON.stringify(this.user));
+    }
     this.firestore.collection("users").doc(user.uid)
           .set(user, {merge: true});
   }
@@ -71,6 +76,14 @@ export class UserService {
 
   isUserSignedIn(): boolean{
     return JSON.parse(localStorage.getItem("user")) != null;
+  }
+
+  isUserAdmin(): boolean{
+    const usr = JSON.parse(localStorage.getItem("user"));
+    if(usr != null && usr['admin'] == true){
+      return true;
+    }
+    return false;
   }
 
   signOut(){

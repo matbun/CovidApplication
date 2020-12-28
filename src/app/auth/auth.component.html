@@ -1,17 +1,25 @@
-<!-- Row to be showed after the login -->
-<div class="row" *ngIf="userService.isUserSignedIn()">
-    <div class="col-sm-6">
-            <h4 class="heading">{{ user.displayName }}</h4>
+
+<div class="mb-5">
+    <!-- Row to be showed after the login -->
+    <div class="row" *ngIf="userService.isUserSignedIn()">
+        <div class="col-sm-6">
+                <h4 class="heading">{{ user.displayName }}</h4>
+        </div>
+        <div class="col-sm-6 text-right">
+            <button class="btn btn-danger" (click)="userService.signOut()">Sign Out</button>
+        </div>
+        <div class="row mb-1 ml-3">
+            <a [routerLink]="['/manage-users']" *ngIf="userService.isUserAdmin()">Admin page: Manage Users</a>
+        </div>
+        
     </div>
-    <div class="col-sm-6 text-right">
-        <button class="btn btn-danger" (click)="userService.signOut()">Sign Out</button>
+
+    <!-- Row to be showed before the login -->
+    <div class="row" *ngIf="!userService.isUserSignedIn()">
+        <div class="col-sm-6"></div>
+        <div class="col-sm-6 text-right">
+            <button class="btn btn-info" (click)="userService.signInWithGoogle()">Sign In with Google</button>
+        </div>
     </div>
 </div>
 
-<!-- Row to be showed before the login -->
-<div class="row" *ngIf="!userService.isUserSignedIn()">
-    <div class="col-sm-6"></div>
-    <div class="col-sm-6 text-right">
-        <button class="btn btn-info" (click)="userService.signInWithGoogle()">Sign In with Google</button>
-    </div>
-</div>

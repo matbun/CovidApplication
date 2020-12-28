@@ -18,7 +18,7 @@
 -->
 <ng-module *ngIf="selectedUserId">
   <mat-form-field class="example-full-width">
-    <input type="text" placeholder="Select countries by name" aria-label="Select Countries" matInput [matAutocomplete]="auto" [formControl]="countryControl">
+    <input type="text" placeholder="Select/deselect country page by name" aria-label="Select Countries" matInput [matAutocomplete]="auto" [formControl]="countryControl">
     <mat-hint>Enter text to find countries by name</mat-hint>
   </mat-form-field>
   
@@ -62,8 +62,13 @@
     <label>Edited users settings:</label>
     {{ showEditedUsers() }}
     <br><br>
-    <button class="btn btn-info" (click)="saveChanges()">Save changes</button>
+    <button class="btn btn-alert" (click)="saveChanges()">Save changes</button>
   </ng-module>
   
 
-  </ng-module>
+</ng-module>
+<!-- Return to home page -->
+<div>
+  <button class="btn btn-info" [routerLink]="['/home-page']">Go back</button>
+</div>
+

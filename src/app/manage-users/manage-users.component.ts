@@ -19,10 +19,8 @@ export class Country {
 })
 export class ManageUsersComponent implements OnInit {
 
-  //countries: Map<string, Object>;
-  countries: Array<Country>;
-  usersPermissions: Map<User, string[]>;
-  users: Array<User>;
+  countries: Array<Country> = new Array<Country>();
+  users: Array<User> = new Array<User>();
 
   // In list box
   selectedUserId = undefined;
@@ -30,7 +28,7 @@ export class ManageUsersComponent implements OnInit {
   editedUsers: Array<User> = new Array<User>();
 
   // In checkbox list
-  selectedCountries: Array<Country>;
+  selectedCountries: Array<Country> = new Array<Country>();
   filteredCountries: Observable<Country[]>;
   lastFilter: string = '';
 
@@ -38,9 +36,6 @@ export class ManageUsersComponent implements OnInit {
 
   constructor(public coviddata: CovidDataService,
     public userService: UserService) { 
-      this.countries = new Array<Country>();
-      this.selectedCountries = new Array<Country>();
-      this.usersPermissions = new Map<User, string[]>();
     }
 
   ngOnInit(): void {
@@ -52,15 +47,14 @@ export class ManageUsersComponent implements OnInit {
 
     this.coviddata.getUsers().subscribe(resp => {
       for (const user of resp.docs.map(doc => doc.data())) {        
-        this.usersPermissions.set({
+        this.users.push({
           uid: user['uid'],
           displayName: user['displayName'],
           admin: user['admin'],
           email: user['email'],
           countriesNewsEditor: user['countriesNewsEditor']
-        }, user['countriesNewsEditor']);
+        });
       }
-      this.users = Array.from(this.usersPermissions.keys());
     });
 
     this.filteredCountries = this.countryControl.valueChanges.pipe(
@@ -68,6 +62,7 @@ export class ManageUsersComponent implements OnInit {
       map(value => typeof value === 'string' ? value : this.lastFilter),
       map(filter => this.filter(filter))
     );
+    
   }
 
   listChanged(){
@@ -88,9 +83,13 @@ export class ManageUsersComponent implements OnInit {
     }
 
     // Add to edited users list
-    const wasAlreadyEdited = this.editedUsers.findIndex((usr) => usr.uid == this.selectedUserId);
+    //this.markAsEdited(this.selectedUser);
+  }
+
+  markAsEdited(user: User){
+    const wasAlreadyEdited = this.editedUsers.findIndex((usr) => usr.uid == user.uid);
     if (wasAlreadyEdited < 0) {
-      this.editedUsers.push(this.selectedUser);
+      this.editedUsers.push(user);
     }
   }
 
@@ -146,6 +145,8 @@ export class ManageUsersComponent implements OnInit {
     }
 
     this.countryControl.setValue(this.selectedCountries);
+    // Mark user as edited
+    this.markAsEdited(this.selectedUser);
   }
 
   selectAllCountries(event: Event){
@@ -167,11 +168,16 @@ export class ManageUsersComponent implements OnInit {
         country.selected = false;
       }
     }
+
+    // Mark user as edited
+    this.markAsEdited(this.selectedUser);
     
   }
 
   toggleAdmin(event: Event){
-    this.selectedUser.admin = !this.selectedUser.admin
+    this.selectedUser.admin = !this.selectedUser.admin;
+    // Mark user as edited
+    this.markAsEdited(this.selectedUser);
   }
 
   saveChanges(){

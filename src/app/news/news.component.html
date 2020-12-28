@@ -1,4 +1,6 @@
+<!--Show news-->
 <ng-module *ngIf="news && news.length > 0">
+  <h4 class="heading">News about {{ country.name }}</h4>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -29,7 +31,9 @@
     </table>
 </ng-module>
 
-<h4 class="heading">Add News</h4>
+<!-- Add news, if eligible to -->
+<ng-module *ngIf="isUserEligibleEditor()">
+  <h4 class="heading">Add News</h4>
 <form (ngSubmit)="addNews()">
   <div class="row mb-3">
     <div class="col-md-6">
@@ -72,3 +76,5 @@
   </div>
   <button class="btn btn-primary">Add</button>
 </form>
+
+</ng-module>
