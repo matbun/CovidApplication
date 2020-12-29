@@ -13,4 +13,32 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     font-size: 1.5rem !important;
 }
 
+thead{
+    font-size: 1rem !important;
+}
+
+table.covid-table{
+    border:2px solid white;
+  }
+table.covid-table > thead > tr > th{
+    border:2px solid white;
+}
+table.covid-table > tbody > tr > td{
+    border:2px solid white;
+}
+
+.bg-cases{
+    background-color: #ffdf76 !important;
+}
+
+.bg-recoveries{
+    background-color: #86c7f3 !important;
+}
+
+.bg-deaths{
+    background-color: #ff89a2 !important;
+}
+.bg-country{
+    background-color: #a3f98e !important;
+}
 

@@ -1,7 +1,7 @@
 
 <div class="mb-5">
     <!-- Row to be showed after the login -->
-    <div class="row" *ngIf="userService.isUserSignedIn()">
+    <div class="row" *ngIf="userService.isUserSignedIn() && user">
         <div class="col-sm-6">
                 <h4 class="heading">{{ user.displayName }}</h4>
         </div>

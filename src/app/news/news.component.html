@@ -1,80 +1,92 @@
-<!--Show news-->
-<ng-module *ngIf="news && news.length > 0">
-  <h4 class="heading">News about {{ country.name }}</h4>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <td>
-                    Date
-                </td>
-                <td>
-                    Title
-                </td>
-                <td>
-                    Corpus
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let n of news">
-                <td>
-                    {{ n.date.toDate() | date }}
-                </td>
-                <td>
-                    {{ n.title }}
-                </td>
-                <td>
-                    {{ n.corpus }}
-                </td>    
-            </tr>
-        </tbody>
-    </table>
-</ng-module>
+<div class="my-5">
 
-<!-- Add news, if eligible to -->
-<ng-module *ngIf="isUserEligibleEditor()">
-  <h4 class="heading">Add News</h4>
-<form (ngSubmit)="addNews()">
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <label for="dateInput">Date</label>
-      <input
-        type="date"
-        id="dateInput"
-        name="dateInput"
-        class="form-control"
-        [(ngModel)]="date"
-        required
-      />
-    </div>
-    <div class="col-md-6">
-      <label for="titleInput">Title</label>
-      <input
-        type="text"
-        id="titleInput"
-        name="titleInput"
-        class="form-control"
-        placeholder="News title"
-        [(ngModel)]="title"
-        required
-      />
-    </div>
+  <!--Show news-->
+  <div class="my-3">
+    <ng-module *ngIf="news && news.length > 0">
+      <h4 class="heading">News about Coronavirus from {{ country.name }}</h4>
+        <div class="justify-content-center d-flex">
+          <div class="w-75">
+            <table class="covid-table table table-bordered table-striped">
+              <thead>
+                  <tr>
+                      <td>
+                          Date
+                      </td>
+                      <td>
+                          Title
+                      </td>
+                      <td>
+                          Corpus
+                      </td>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let n of news">
+                      <td>
+                          {{ n.date.toDate() | date }}
+                      </td>
+                      <td>
+                          {{ n.title }}
+                      </td>
+                      <td>
+                          {{ n.corpus }}
+                      </td>    
+                  </tr>
+              </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-module>
   </div>
-  <div class="row mb-3">
-    <div class="col-12">
-      <label for="corpusInput">Corpus</label>
-      <input
-        type="text"
-        id="corpusInput"
-        name="corpusInput"
-        class="form-control"
-        placeholder="News corpus"
-        [(ngModel)]="corpus"
-        required
-      />
-    </div>
-  </div>
-  <button class="btn btn-primary">Add</button>
-</form>
 
-</ng-module>
+
+  <!-- Add news, if eligible to -->
+  <div class="my-3">
+    <ng-module *ngIf="isUserEligibleEditor()">
+      <h4 class="heading">Add News</h4>
+      <form (ngSubmit)="addNews()">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="dateInput">Date</label>
+            <input
+              type="date"
+              id="dateInput"
+              name="dateInput"
+              class="form-control"
+              [(ngModel)]="date"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="titleInput">Title</label>
+            <input
+              type="text"
+              id="titleInput"
+              name="titleInput"
+              class="form-control"
+              placeholder="News title"
+              [(ngModel)]="title"
+              required
+            />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-12">
+            <label for="corpusInput">Corpus</label>
+            <input
+              type="text"
+              id="corpusInput"
+              name="corpusInput"
+              class="form-control"
+              placeholder="News corpus"
+              [(ngModel)]="corpus"
+              required
+            />
+          </div>
+        </div>
+        <button class="btn btn-primary">Add</button>
+      </form>
+    </ng-module>
+  </div>
+
+</div>

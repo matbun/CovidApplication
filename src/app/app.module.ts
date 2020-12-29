@@ -10,7 +10,6 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { StatePageComponent } from './state-page/state-page.component';
 import { AuthComponent } from './auth/auth.component';
 import { NewsComponent } from './news/news.component';
-import { AddNewsComponent } from './add-news/add-news.component';
 import { DataVizComponent } from './data-viz/data-viz.component';
 import { ChartsModule } from 'ng2-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -35,7 +34,6 @@ import {  MatInputModule } from '@angular/material/input';
     StatePageComponent,
     AuthComponent,
     NewsComponent,
-    AddNewsComponent,
     DataVizComponent,
     ManageUsersComponent
   ],

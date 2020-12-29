@@ -24,6 +24,7 @@ export class NewsComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.userService.getUser();
+    
     this.country = this.coviddata.getCovidCountry();
 
     this.coviddata.getNews().subscribe((news: News[])=>{
@@ -45,13 +46,15 @@ export class NewsComponent implements OnInit {
   }
 
   isUserEligibleEditor(): boolean{
-    // Update user
+    // Refresh user
     this.user = this.userService.getUser();
 
     // look for permission
-    const i = this.user.countriesNewsEditor.findIndex((val) => val == this.coviddata.getCovidCountry().slug);
-    if (i >= 0) {
-      return true;
+    if (this.user != null) {
+      const i = this.user.countriesNewsEditor.findIndex((val) => val == this.coviddata.getCovidCountry().slug);
+      if (i >= 0) {
+        return true;
+      }
     }
     return false;
   }

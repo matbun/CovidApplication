@@ -39,7 +39,7 @@ export class UserService {
         uid: credentials.user.uid,
         displayName: credentials.user.displayName,
         email: credentials.user.email,
-        admin: false,
+        admin: false, // Change here to set admin as default
         countriesNewsEditor: []
       }
     }
@@ -62,6 +62,7 @@ export class UserService {
     var currUser = this.getUser();
     if (user.uid == currUser.uid) {
       this.user = user;
+      localStorage.removeItem("user");
       localStorage.setItem("user", JSON.stringify(this.user));
     }
     this.firestore.collection("users").doc(user.uid)
@@ -70,7 +71,7 @@ export class UserService {
 
 
   // Method used by components, in order to get user data
-  getUser(){
+  getUser(){    
     return JSON.parse(localStorage.getItem("user"));
   }
 
