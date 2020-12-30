@@ -1,7 +1,7 @@
 <div class="my-5">
 
+    <h1>Coronavirus cases daily summary</h1>
     <ng-container *ngIf="todayData">
-        <h1>Coronavirus cases summary</h1>
         <div class="justify-content-center d-flex">
             <div class="w-75">
                 <table class="table table-bordered covid-table">
@@ -38,12 +38,19 @@
                 </table>
             </div>
         </div>
-        <!-- Pie chart -->
-        <div class="my-5">
-            <div class="row">
-                <h1>Coronavirus cases distribution: {{ countryName }}</h1>
-            </div>
+    </ng-container>
+    <ng-container *ngIf="!todayData">
+        <div class="justify-content-center d-flex">
+            <mat-spinner></mat-spinner>
+        </div>
+    </ng-container>
 
+    <!-- Pie chart -->
+    <div class="my-5">
+        <div class="row">
+            <h1>Coronavirus cases distribution: {{ countryName }}</h1>
+        </div>
+        <ng-container *ngIf="todayData">
             <div class="h-75" style="display: block;">
                 <canvas baseChart 
                 [data]="pieChartData" 
@@ -54,15 +61,20 @@
                 [legend]="pieChartLegend">
                 </canvas>
             </div>
-        </div>     
-    </ng-container>
-
-    <ng-container *ngIf="weekData">
-        <div class="my-5">
-            <div class="row">
-                <h1>Coronavirus cases weekly distribution: {{ countryName }}</h1>
+        </ng-container>
+        <ng-container *ngIf="!todayData">
+            <div class="justify-content-center d-flex">
+                <mat-spinner></mat-spinner>
             </div>
+        </ng-container>
+    </div>     
 
+    
+    <div class="my-5">
+        <div class="row">
+            <h1>Coronavirus cases weekly distribution: {{ countryName }}</h1>
+        </div>
+        <ng-container *ngIf="weekData">
             <div style="display: block;" class="my-75">
                 <canvas baseChart 
                 [datasets]="barChartData"
@@ -73,68 +85,86 @@
                 [chartType]="barChartType">
                 </canvas>
             </div>
-            
-        </div>
-    </ng-container>
-
-
-
-    <ng-container *ngIf="dayOneData">
-        <div class="my-5">
-            <div class="row">
-                <h1>Total Coronavirus cases {{ countryName }}</h1>
+        </ng-container>
+        <ng-container *ngIf="!weekData">
+            <div class="justify-content-center d-flex">
+                <mat-spinner></mat-spinner>
             </div>
+        </ng-container>
+    </div>
+    
 
-        <div style="display: block;" class="h-75">
-            <canvas baseChart 
-            [datasets]="lineChartData"
-            [labels]="lineChartLabels"
-            [options]="lineChartOptions"
-            [colors]="lineChartColors"
-            [legend]="lineChartLegend"
-            [chartType]="lineChartType"
-            [plugins]="lineChartPlugins">
-            </canvas>
+
+
+    
+    <div class="my-5">
+        <div class="row">
+            <h1>Total Coronavirus cases: {{ countryName }}</h1>
         </div>
-        </div>
-    </ng-container>
+
+        <ng-container *ngIf="dayOneData">
+            <div style="display: block;" class="h-75">
+                <canvas baseChart 
+                [datasets]="lineChartData"
+                [labels]="lineChartLabels"
+                [options]="lineChartOptions"
+                [colors]="lineChartColors"
+                [legend]="lineChartLegend"
+                [chartType]="lineChartType"
+                [plugins]="lineChartPlugins">
+                </canvas>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="!dayOneData">
+            <div class="justify-content-center d-flex">
+                <mat-spinner></mat-spinner>
+            </div>
+        </ng-container>
+    </div>
 
 
 
-    <ng-container *ngIf="countriesTable.length > 0 && countrySlug == 'world'">
+    <ng-container *ngIf="countrySlug == 'world'">
         <div class="my-5">
             <div>
                 <h1>Coronavirus cases by country</h1>
                 <p class="lead">Click on the country name to see more details.</p>
             </div>
 
-            <table matSort (matSortChange)="sortData($event)" class="table table-bordered covid-table text-center">
-                <thead class="text-center font-weight-bold">
-                    <tr>
-                        <td mat-sort-header="name" class="bg-country">Country <i class="fa fa-fw fa-sort"></i></td>
-                        <td mat-sort-header="newConfirmed" class="bg-cases">New Cases <i class="fa fa-fw fa-sort"></i></td>
-                        <td mat-sort-header="totalConfirmed" class="bg-cases">Total Cases <i class="fa fa-fw fa-sort"></i></td>
-                        <td mat-sort-header="newRecovered" class="bg-recoveries">New Recoveries <i class="fa fa-fw fa-sort"></i></td>
-                        <td mat-sort-header="totalRecovered" class="bg-recoveries">Total Recoveries <i class="fa fa-fw fa-sort"></i></td>
-                        <td mat-sort-header="newDeaths" class="bg-deaths">New Deaths <i class="fa fa-fw fa-sort"></i></td>
-                        <td mat-sort-header="totalDeaths" class="bg-deaths">Total Deaths <i class="fa fa-fw fa-sort"></i></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let country of sortedCountriesTable">
-                        <td class="bg-country"><a [routerLink]="['/state-page']" 
-                                                class="badge badge-light"
-                                                style="font-size:medium;"
-                                                (click)="coviddata.setCovidCountry(country.name, country.slug, country.code)">{{ country.name }}</a></td>
-                        <td class="bg-cases">{{ country.newConfirmed }}</td>
-                        <td class="bg-cases">{{ country.totalConfirmed }}</td>
-                        <td class="bg-recoveries">{{ country.newRecovered }}</td>
-                        <td class="bg-recoveries">{{ country.totalRecovered }}</td>
-                        <td class="bg-deaths">{{ country.newDeaths }}</td>
-                        <td class="bg-deaths">{{ country.totalDeaths }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <ng-container *ngIf="countriesTable && countriesTable.length > 0">
+                <table matSort (matSortChange)="sortData($event)" class="table table-bordered covid-table text-center">
+                    <thead class="text-center font-weight-bold">
+                        <tr>
+                            <td mat-sort-header="name" class="bg-country">Country <i class="fa fa-fw fa-sort"></i></td>
+                            <td mat-sort-header="newConfirmed" class="bg-cases">New Cases <i class="fa fa-fw fa-sort"></i></td>
+                            <td mat-sort-header="totalConfirmed" class="bg-cases">Total Cases <i class="fa fa-fw fa-sort"></i></td>
+                            <td mat-sort-header="newRecovered" class="bg-recoveries">New Recoveries <i class="fa fa-fw fa-sort"></i></td>
+                            <td mat-sort-header="totalRecovered" class="bg-recoveries">Total Recoveries <i class="fa fa-fw fa-sort"></i></td>
+                            <td mat-sort-header="newDeaths" class="bg-deaths">New Deaths <i class="fa fa-fw fa-sort"></i></td>
+                            <td mat-sort-header="totalDeaths" class="bg-deaths">Total Deaths <i class="fa fa-fw fa-sort"></i></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let country of sortedCountriesTable">
+                            <td class="bg-country"><a [routerLink]="['/state-page']" 
+                                                    class="badge badge-light"
+                                                    style="font-size:medium;"
+                                                    (click)="coviddata.setCovidCountry(country.name, country.slug, country.code)">{{ country.name }}</a></td>
+                            <td class="bg-cases">{{ country.newConfirmed }}</td>
+                            <td class="bg-cases">{{ country.totalConfirmed }}</td>
+                            <td class="bg-recoveries">{{ country.newRecovered }}</td>
+                            <td class="bg-recoveries">{{ country.totalRecovered }}</td>
+                            <td class="bg-deaths">{{ country.newDeaths }}</td>
+                            <td class="bg-deaths">{{ country.totalDeaths }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-container>
+            <ng-container *ngIf="!countriesTable || countriesTable.length == 0">
+                <div class="justify-content-center d-flex">
+                    <mat-spinner></mat-spinner>
+                </div>
+            </ng-container>
         </div>
     </ng-container>
 

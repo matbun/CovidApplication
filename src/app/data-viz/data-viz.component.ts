@@ -114,9 +114,9 @@ export class DataVizComponent implements OnInit {
         this.pieChartData = [this.todayData.totalDeaths,
                             this.todayData.totalRecovered,
                             this.todayData.totalConfirmed
-                            ];
-                       
+                            ];                       
       }
+    ).catch(exception => {console.log(exception);}
     );
     
     // Week data
