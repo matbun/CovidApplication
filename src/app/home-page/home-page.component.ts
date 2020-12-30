@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CovidDataService } from '../covid-data.service';
 import { Country } from '../country.module';
 
@@ -8,6 +8,7 @@ import { Country } from '../country.module';
   styleUrls: ['./home-page.component.scss']
 })
 export class HomePageComponent implements OnInit {
+  @Input() parentName: string;
 
   constructor(public coviddata: CovidDataService) { }
 
