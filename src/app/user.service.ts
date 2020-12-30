@@ -76,6 +76,10 @@ export class UserService {
   }
 
   isUserSignedIn(): boolean{
+    console.log("check logged in");
+    
+    console.log(JSON.parse(localStorage.getItem("user")) != null);
+    
     return JSON.parse(localStorage.getItem("user")) != null;
   }
 

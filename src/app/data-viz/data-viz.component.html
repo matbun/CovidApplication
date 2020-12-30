@@ -7,10 +7,10 @@
                 <table class="table table-bordered covid-table">
                     <thead class="text-center font-weight-bold bg-country">
                         <tr *ngIf="countryName == 'Worldwide'">
-                            <td colspan="2">{{ countryName }}</td>
+                            <td colspan="2" class="td-head-covid-table">{{ countryName }}</td>
                         </tr>
                         <tr *ngIf="countryName != 'Worldwide'">
-                            <td colspan="2">Worldwide <i class="fa fa-angle-double-right"></i> {{ countryName }}</td>
+                            <td colspan="2" class="td-head-covid-table">Worldwide <i class="fa fa-angle-double-right"></i> {{ countryName }}</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -134,20 +134,20 @@
             <ng-container *ngIf="countriesTable && countriesTable.length > 0">
                 <table matSort (matSortChange)="sortData($event)" class="table table-bordered covid-table text-center">
                     <thead class="text-center font-weight-bold">
-                        <tr>
-                            <td mat-sort-header="name" class="bg-country">Country <i class="fa fa-fw fa-sort"></i></td>
-                            <td mat-sort-header="newConfirmed" class="bg-cases">New Cases <i class="fa fa-fw fa-sort"></i></td>
-                            <td mat-sort-header="totalConfirmed" class="bg-cases">Total Cases <i class="fa fa-fw fa-sort"></i></td>
-                            <td mat-sort-header="newRecovered" class="bg-recoveries">New Recoveries <i class="fa fa-fw fa-sort"></i></td>
-                            <td mat-sort-header="totalRecovered" class="bg-recoveries">Total Recoveries <i class="fa fa-fw fa-sort"></i></td>
-                            <td mat-sort-header="newDeaths" class="bg-deaths">New Deaths <i class="fa fa-fw fa-sort"></i></td>
-                            <td mat-sort-header="totalDeaths" class="bg-deaths">Total Deaths <i class="fa fa-fw fa-sort"></i></td>
+                        <tr class="text-center">
+                            <td mat-sort-header="name" class="bg-country td-head-covid-table">Country <i class="fa fa-fw fa-sort"></i></td>
+                            <td mat-sort-header="newConfirmed" class="bg-cases td-head-covid-table">New Cases <i class="fa fa-fw fa-sort"></i></td>
+                            <td mat-sort-header="totalConfirmed" class="bg-cases td-head-covid-table">Total Cases <i class="fa fa-fw fa-sort"></i></td>
+                            <td mat-sort-header="newRecovered" class="bg-recoveries td-head-covid-table">New Recoveries <i class="fa fa-fw fa-sort"></i></td>
+                            <td mat-sort-header="totalRecovered" class="bg-recoveries td-head-covid-table">Total Recoveries <i class="fa fa-fw fa-sort"></i></td>
+                            <td mat-sort-header="newDeaths" class="bg-deaths td-head-covid-table">New Deaths <i class="fa fa-fw fa-sort"></i></td>
+                            <td mat-sort-header="totalDeaths" class="bg-deaths td-head-covid-table">Total Deaths <i class="fa fa-fw fa-sort"></i></td>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let country of sortedCountriesTable">
                             <td class="bg-country"><a [routerLink]="['/state-page']" 
-                                                    class="badge badge-light"
+                                                    class="badge badge-secondary"
                                                     style="font-size:medium;"
                                                     (click)="coviddata.setCovidCountry(country.name, country.slug, country.code)">{{ country.name }}</a></td>
                             <td class="bg-cases">{{ country.newConfirmed }}</td>

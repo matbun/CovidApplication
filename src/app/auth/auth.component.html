@@ -21,10 +21,10 @@
                     <a class="nav-link" style="pointer-events: none;">{{ user.displayName }}</a>
                 </li>
             </ul>
-            <button class="btn btn-outline-danger my-2 my-sm-0" (click)="userService.signOut()">Sign Out</button>
+            <button class="btn btn-outline-danger my-2 my-sm-0" (click)="signOut()">Sign Out</button>
         </ng-container>
         <ng-container *ngIf="!userService.isUserSignedIn() || !user">
-            <button class="btn btn-outline-success my-2 my-sm-0" (click)="userService.signInWithGoogle()">Sign In with Google</button>
+            <button class="btn btn-outline-success my-2 my-sm-0" (click)="signInWithGoogle()">Sign In with Google</button>
         </ng-container>
       </div>
     </div>

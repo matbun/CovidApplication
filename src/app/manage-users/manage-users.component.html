@@ -1,77 +1,88 @@
 <!-- Authentication and navigation component-->
 <app-auth></app-auth>
 
-<h1>Select the user to edit</h1>
-<ng-module *ngIf="users && users.length > 0">
-  <mat-form-field appearance="fill">
-    <mat-label>Select user</mat-label>
-    <mat-select (selectionChange)="listChanged()" [(ngModel)]="selectedUserId">
-      <mat-option *ngFor="let usr of users" [value]="usr.uid">
-        {{usr.displayName}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-</ng-module>
+<div class="justify-content-center d-flex">
+  <div class="mt-4 mx-3">
+    <h1>Select the user to edit</h1>
+    <div class="row">
 
-<!--
-<section class="example-section">
-  <mat-checkbox class="example-margin">Check me!</mat-checkbox>
-  <mat-checkbox class="example-margin" [disabled]="true">Disabled</mat-checkbox>
-</section>
--->
-<ng-module *ngIf="selectedUserId">
-  <mat-form-field class="example-full-width">
-    <input type="text" placeholder="Select/deselect country page by name" aria-label="Select Countries" matInput [matAutocomplete]="auto" [formControl]="countryControl">
-    <mat-hint>Enter text to find countries by name</mat-hint>
-  </mat-form-field>
-  
-  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-    <mat-option *ngFor="let user of filteredCountries | async" [value]="selectedCountries">
-      <div (click)="optionClicked($event, user)">
-        <mat-checkbox [checked]="user.selected" (change)="toggleSelection(user)" (click)="$event.stopPropagation()">
-          {{ user.name }} 
-        </mat-checkbox>
+      <!-- Column 1: Select user -->
+      <div class="mx-3">
+        <ng-container *ngIf="users && users.length > 0">
+          <mat-form-field appearance="fill">
+            <mat-label>Select user</mat-label>
+            <mat-select (selectionChange)="listChanged()" [(ngModel)]="selectedUserId">
+              <mat-option *ngFor="let usr of users" [value]="usr.uid">
+                {{usr.displayName}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </ng-container>
       </div>
-    </mat-option>
-  </mat-autocomplete>
-  
-  <br><br>
 
-  <section class="example-section">
-    <mat-checkbox class="example-margin" (change)="selectAllCountries($event)" >Select all!</mat-checkbox>
-  </section>
+      <!-- Column 2: Select countries-->
+      <div class="template-column mx-3 px-3">
+        <ng-container *ngIf="selectedUserId">
+          <mat-form-field class="example-full-width">
+            <input type="text" placeholder="Select/deselect country page by name" aria-label="Select Countries" matInput [matAutocomplete]="auto" [formControl]="countryControl">
+            <mat-hint>Enter text to find countries by name</mat-hint>
+          </mat-form-field>
+          
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+            <mat-option *ngFor="let user of filteredCountries | async" [value]="selectedCountries">
+              <div (click)="optionClicked($event, user)">
+                <mat-checkbox [checked]="user.selected" (change)="toggleSelection(user)" (click)="$event.stopPropagation()">
+                  {{ user.name }} 
+                </mat-checkbox>
+              </div>
+            </mat-option>
+          </mat-autocomplete>
+          
+          <br><br>
 
-  <br>
+          <section class="example-section">
+            <mat-checkbox class="example-margin" (change)="selectAllCountries($event)" >Select all!</mat-checkbox>
+          </section>
 
-  
-  <label>Selected Countries:</label>
-  <mat-list dense>
-    <mat-list-item *ngIf="selectedCountries?.length === 0">(None)</mat-list-item>
-    <mat-list-item *ngFor="let user of selectedCountries">
-      {{ user.name }} 
-    </mat-list-item>
-  </mat-list>
-  <br>
+          <br>
 
-  
-  <section class="example-section">
-    <mat-checkbox class="example-margin" (change)="toggleAdmin($event)"
-    [checked]="selectedUser.admin">Make this user admin</mat-checkbox>
-  </section>
+          
+          <label class="font-weight-bold">Selected Countries:</label>
+          <mat-list dense class="selected-countries-list">
+            <mat-list-item *ngIf="selectedCountries?.length === 0">(None)</mat-list-item>
+            <mat-list-item *ngFor="let country of selectedCountries">
+              {{ country.name }} 
+            </mat-list-item>
+          </mat-list>
+          <br>
+        </ng-container>
+      </div>
 
-  
-  <ng-module *ngIf="editedUsers && editedUsers.length > 0">
-    <br>
-    <label>Edited users settings:</label>
-    {{ showEditedUsers() }}
-    <br><br>
-    <button class="btn btn-danger" (click)="saveChanges()">Save changes</button>
-  </ng-module>
-  
+      <!-- Column 3: make admin -->
+      <div class="mx-3">
+        <ng-container *ngIf="selectedUserId">
+          <section class="example-section">
+            <mat-slide-toggle class="example-margin" (change)="toggleAdmin($event)"
+            [checked]="selectedUser.admin">Make this user admin</mat-slide-toggle>
+          </section>
+        </ng-container>
+      </div>
+    </div>
 
-</ng-module>
-<!-- Return to home page -->
-<div class="mt-3">
-  <button class="btn btn-info" [routerLink]="['/home-page']">Go back</button>
+
+    <!--Save changes-->
+    <div>
+      <ng-container *ngIf="editedUsers && editedUsers.length > 0">
+        <br>
+        <label>Edited users settings:</label>
+        {{ showEditedUsers() }}
+        <br><br>
+        <button class="btn btn-danger" (click)="saveChanges()">Save changes</button>
+      </ng-container>
+    </div>
+  </div>
 </div>
+
+
+
 

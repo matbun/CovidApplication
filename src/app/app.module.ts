@@ -30,6 +30,9 @@ import {MatCardModule} from '@angular/material/card';
 import {MatPaginatorModule} from '@angular/material/paginator'; 
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'; 
 
+
+import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,7 +62,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatInputModule,
     MatCardModule,
     MatPaginatorModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSlideToggleModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -19,4 +19,16 @@ export class AuthComponent implements OnInit {
     this.user = this.userService.getUser();
   }
 
+  signInWithGoogle(){
+    this.userService.signInWithGoogle().then(resp => {
+      this.user = this.userService.getUser();
+    });
+    
+  }
+
+  signOut(){
+    this.userService.signOut();
+    this.user = undefined;
+  }
+
 }
