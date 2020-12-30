@@ -3,18 +3,12 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
-    font-weight: 500 !important;
-    line-height: 1.2 !important;
-}
-
-
-.heading{
-    font-size: 1.5rem !important;
-}
 
 thead{
     font-size: 1rem !important;
+}
+td.news-table {
+    border-bottom-style: unset !important;
 }
 
 table.covid-table{
@@ -39,6 +33,6 @@ table.covid-table > tbody > tr > td{
     background-color: #ff89a2 !important;
 }
 .bg-country{
-    background-color: #a3f98e !important;
+    background-color: #8cfb89 !important; //#a3f98e !important;
 }
 

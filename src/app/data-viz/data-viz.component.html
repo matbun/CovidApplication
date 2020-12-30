@@ -1,11 +1,11 @@
 <div class="my-5">
 
     <ng-container *ngIf="todayData">
-        <h4 class="heading">Coronavirus cases summary</h4>
+        <h1>Coronavirus cases summary</h1>
         <div class="justify-content-center d-flex">
             <div class="w-75">
                 <table class="table table-bordered covid-table">
-                    <thead class="text-center font-weight-bold table-success">
+                    <thead class="text-center font-weight-bold bg-country">
                         <tr *ngIf="countryName == 'Worldwide'">
                             <td colspan="2">{{ countryName }}</td>
                         </tr>
@@ -16,15 +16,23 @@
                     <tbody>
                         <tr *ngFor="let case of todayData.cases" class="bg-cases">
                             <td class="col-6">{{ case[0] }}</td>
-                            <td class="col-6 text-right">{{ case[1] }}</td>
+                            <td class="col-6 text-right">{{ case[1] | number: '1.0' }}</td>
                         </tr>
                         <tr *ngFor="let recover of todayData.recovers" class="bg-recoveries">
                             <td class="col-6">{{ recover[0] }}</td>
-                            <td class="col-6 text-right">{{ recover[1] }}</td>
+                            <td class="col-6 text-right">{{ recover[1]  | number: '1.0' }}</td>
+                        </tr>
+                        <tr class="bg-recoveries">
+                            <td class="col-6">Recovery Rate</td>
+                            <td class="col-6 text-right"> {{ todayData.recoveryRate | number: '1.2-2' }} %</td>
                         </tr>
                         <tr *ngFor="let deaths of todayData.deaths" class="bg-deaths">
                             <td class="col-6">{{ deaths[0] }}</td>
-                            <td class="col-6 text-right">{{ deaths[1] }}</td>
+                            <td class="col-6 text-right">{{ deaths[1] | number: '1.0' }}</td>
+                        </tr>
+                        <tr class="bg-deaths">
+                            <td class="col-6">Mortality Rate</td>
+                            <td class="col-6 text-right"> {{ todayData.mortalityRate | number: '1.2-2' }} %</td>
                         </tr>
                     </tbody>
                 </table>
@@ -33,7 +41,7 @@
         <!-- Pie chart -->
         <div class="my-5">
             <div class="row">
-                <h4 class="heading">Coronavirus cases distribution: {{ countryName }}</h4>
+                <h1>Coronavirus cases distribution: {{ countryName }}</h1>
             </div>
 
             <div class="h-75" style="display: block;">
@@ -52,7 +60,7 @@
     <ng-container *ngIf="weekData">
         <div class="my-5">
             <div class="row">
-                <h4 class="heading">Coronavirus cases weekly distribution: {{ countryName }}</h4>
+                <h1>Coronavirus cases weekly distribution: {{ countryName }}</h1>
             </div>
 
             <div style="display: block;" class="my-75">
@@ -74,7 +82,7 @@
     <ng-container *ngIf="dayOneData">
         <div class="my-5">
             <div class="row">
-                <h4 class="heading">Total Coronavirus cases {{ countryName }}</h4>
+                <h1>Total Coronavirus cases {{ countryName }}</h1>
             </div>
 
         <div style="display: block;" class="h-75">
@@ -96,7 +104,7 @@
     <ng-container *ngIf="countriesTable.length > 0 && countrySlug == 'world'">
         <div class="my-5">
             <div>
-                <h4 class="heading">Coronavirus cases by country</h4>
+                <h1>Coronavirus cases by country</h1>
                 <p class="lead">Click on the country name to see more details.</p>
             </div>
 

@@ -5,7 +5,7 @@ export class TodayData{
 
     newDeaths: number;
     totalDeaths: number;
-    mortalityRate: number;
+    mortalityRate: number ;
 
     newRecovered: number;
     totalRecovered: number;
@@ -40,13 +40,11 @@ export class TodayData{
         
         this.deaths = [
                         ["Total Deaths", this.totalDeaths],
-                        ["New Deaths", this.newDeaths],
-                        ["Mortality Rate", this.mortalityRate]
+                        ["New Deaths", this.newDeaths]
                     ];
         this.recovers = [
                         ["Total Recovered", this.totalRecovered],
-                        ["New Recovered", this.newRecovered],
-                        ["Recovery Rate", this.recoveryRate]
+                        ["New Recovered", this.newRecovered]
                     ];
 
     }

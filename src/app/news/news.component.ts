@@ -1,19 +1,33 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild} from '@angular/core';
 import { Country } from '../country.module';
 import { CovidDataService } from '../covid-data.service';
 import { News } from '../news.module';
 import { User } from '../user.module';
 import { UserService } from '../user.service';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
+
+export interface Post{
+  post: News;
+}
 
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.scss']
 })
-export class NewsComponent implements OnInit {
+
+export class NewsComponent implements OnInit, AfterViewInit {
+
   user: User;
   country: Country;
   news: News[] = [];
+
+  // Mat table
+  posts: Post[] = [];
+  displayedColumns = ['post'];
+  dataSource: MatTableDataSource<Post> = new MatTableDataSource<Post>(this.posts);;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   date: any;
   title: string;
@@ -21,6 +35,10 @@ export class NewsComponent implements OnInit {
 
   constructor(public coviddata: CovidDataService,
               public userService: UserService) { }
+  
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+  }
 
   ngOnInit(): void {
     this.user = this.userService.getUser();
@@ -29,15 +47,23 @@ export class NewsComponent implements OnInit {
 
     this.coviddata.getNews().subscribe((news: News[])=>{
       this.news = news;
+      // Load news as posts
+      this.posts = [];
+      for (const n of this.news) {
+        this.posts.push({post: n});
+      }
+      this.dataSource = new MatTableDataSource<Post>(this.posts);
+      // Refresh paginator
+      this.ngAfterViewInit();
     });
-
   }
 
   addNews(){
-    let lastNews = {
+    let lastNews: News = {
       date: new Date(this.date),
       title: this.title,
-      corpus: this.corpus
+      corpus: this.corpus,
+      author: this.userService.getUser().displayName
     }
     this.coviddata.addNews(lastNews);
     this.date = undefined;

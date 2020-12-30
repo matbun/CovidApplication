@@ -26,6 +26,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {MatListModule} from '@angular/material/list';
 import {MatAutocompleteModule} from '@angular/material/autocomplete'; 
 import {  MatInputModule } from '@angular/material/input';
+import {MatCardModule} from '@angular/material/card'; 
+
+import {MatPaginatorModule} from '@angular/material/paginator'; 
 
 @NgModule({
   declarations: [
@@ -53,7 +56,9 @@ import {  MatInputModule } from '@angular/material/input';
     ReactiveFormsModule,
     MatListModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatCardModule,
+    MatPaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]
