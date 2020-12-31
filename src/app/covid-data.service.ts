@@ -40,18 +40,8 @@ export class CovidDataService {
   // get data from api/db
   async getTodayData(): Promise<any>{
     this.country = this.getCovidCountry();
-    /*
-    this.firestore.collection("users").doc(this.user.uid)
-          .set({
-            uid: this.user.uid,
-            displayName: this.user.displayName,
-            email: this.user.email
-          }, {merge: true});
-    */
     const today_string = (new Date()).toISOString().split("T")[0];    
     
-    // AVOID READ FROM SERVER
-    /*
     const countriesSummary = this.firestore.collection("summary").doc(today_string);
     const resp = await countriesSummary.get().toPromise();
     var responseDoc;
@@ -88,36 +78,11 @@ export class CovidDataService {
       for (const country of resp['Countries']) {
         responseDoc.push(country);
       }
-      //console.log(responseDoc);
       
       // 3. Load on server
       countriesSummary.set({data: responseDoc}, {merge: true});
     } 
-    */
-
-    // PATCH STARTS HERE
-    var responseDoc;
-    // 1. Get from API
-    const resp = await this.httpClient.get('https://api.covid19api.com/summary').toPromise();
-    //console.log(resp);
     
-    // 2. Format response
-    responseDoc = [];
-    responseDoc.push({
-      Slug: 'world',
-      Country: 'Worldwide',
-      NewConfirmed: resp['Global']['NewConfirmed'],
-      TotalConfirmed: resp['Global']['TotalConfirmed'],
-      NewDeaths: resp['Global']['NewDeaths'],
-      TotalDeaths: resp['Global']['TotalDeaths'],
-      NewRecovered: resp['Global']['NewRecovered'],
-      TotalRecovered: resp['Global']['TotalRecovered']
-    })
-    for (const country of resp['Countries']) {
-      responseDoc.push(country);
-    }
-
-    //PATCH ENDS HERE
   
       if (this.country.getSlug() == "world"){
         const worldIndex = responseDoc.findIndex((el) => el['Slug'] == this.country.getSlug());
