@@ -31,7 +31,8 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'; 
 
 
-import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { FooterComponent } from './footer/footer.component'; 
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     AuthComponent,
     NewsComponent,
     DataVizComponent,
-    ManageUsersComponent
+    ManageUsersComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
