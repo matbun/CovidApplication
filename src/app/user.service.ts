@@ -39,7 +39,7 @@ export class UserService {
         uid: credentials.user.uid,
         displayName: credentials.user.displayName,
         email: credentials.user.email,
-        admin: true, // true: set new user as admin by default.
+        admin: true, // true: set new user as admin by default. 
         countriesNewsEditor: []
       }
     }

@@ -26,8 +26,13 @@ export class NewsComponent implements OnInit, AfterViewInit {
   // Mat table
   posts: Post[] = [];
   displayedColumns = ['post'];
-  dataSource: MatTableDataSource<Post> = new MatTableDataSource<Post>(this.posts);;
+  dataSource: MatTableDataSource<Post> = new MatTableDataSource<Post>();
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  /*
+  @ViewChild(MatPaginator, {static: true}) set matPaginator(paginator: MatPaginator) {
+    this.dataSource.paginator = paginator;
+  }
+  */
 
   date: any;
   title: string;
@@ -36,11 +41,11 @@ export class NewsComponent implements OnInit, AfterViewInit {
   constructor(public coviddata: CovidDataService,
               public userService: UserService) { }
   
-  ngAfterViewInit(): void {
+  ngAfterViewInit(): void {    
     this.dataSource.paginator = this.paginator;
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {  
     this.user = this.userService.getUser();
     
     this.country = this.coviddata.getCovidCountry();
@@ -52,9 +57,8 @@ export class NewsComponent implements OnInit, AfterViewInit {
       for (const n of this.news) {
         this.posts.push({post: n});
       }
-      this.dataSource = new MatTableDataSource<Post>(this.posts);
-      // Refresh paginator
-      this.ngAfterViewInit();
+      // Add posts to dataSource object
+      this.dataSource.data = this.posts;
     });
   }
 

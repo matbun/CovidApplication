@@ -1,8 +1,7 @@
 <div class="my-5">
 
   <!--Show news-->
-  <div class="my-3">
-    <ng-module *ngIf="news && news.length > 0">
+  <div class="my-3" [hidden]="!news || news.length == 0">
       <h1>News about Coronavirus from {{ country.name }}</h1>
 
       <div class="justify-content-center d-flex">
@@ -28,17 +27,16 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
         
-          <mat-paginator [pageSizeOptions]="[3, 5, 10]" showFirstLastButtons *ngIf="dataSource"></mat-paginator>
+          <mat-paginator [pageSizeOptions]="[3, 5, 10]" showFirstLastButtons ></mat-paginator>
         </div>
         
         
       </div>
-    </ng-module>
   </div>
 
 
   <!-- Add news, if eligible to -->
-  <ng-module *ngIf="isUserEligibleEditor()">
+  <ng-container *ngIf="isUserEligibleEditor()">
     <div class="my-3">
       <h1>Add News</h1>
       <form (ngSubmit)="addNews()" class="mx-4">
@@ -84,5 +82,5 @@
         <button class="btn btn-primary">Add</button>
       </form>
     </div>
-  </ng-module>
+  </ng-container>
 </div>
