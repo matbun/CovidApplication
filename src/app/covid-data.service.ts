@@ -86,31 +86,6 @@ export class CovidDataService {
       countriesSummary.set({data: responseDoc}, {merge: true});
     } 
     
-
-    // PATCH STARTS HERE
-    /*
-    var responseDoc;
-    // 1. Get from API
-    const resp = await this.httpClient.get('https://api.covid19api.com/summary').toPromise();
-    //console.log(resp);
-    
-    // 2. Format response
-    responseDoc = [];
-    responseDoc.push({
-      Slug: 'world',
-      Country: 'Worldwide',
-      NewConfirmed: resp['Global']['NewConfirmed'],
-      TotalConfirmed: resp['Global']['TotalConfirmed'],
-      NewDeaths: resp['Global']['NewDeaths'],
-      TotalDeaths: resp['Global']['TotalDeaths'],
-      NewRecovered: resp['Global']['NewRecovered'],
-      TotalRecovered: resp['Global']['TotalRecovered']
-    })
-    for (const country of resp['Countries']) {
-      responseDoc.push(country);
-    }
-    */
-    //PATCH ENDS HERE
   
       if (this.country.getSlug() == "world"){
         const worldIndex = responseDoc.findIndex((el) => el['Slug'] == this.country.getSlug());
